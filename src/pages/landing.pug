@@ -1,0 +1,64 @@
+include ../mixins/icons
+
+.main
+  .control-group
+    button#fullscreen-button.icon-button.icon-button--small
+      +svg-icon.red.big(svg-icon-name='fullscreen')
+    button#settings-button.icon-button.icon-button--small
+      +svg-icon.red.big(svg-icon-name='settings')
+
+  canvas#confetti-canvas.confetti
+
+  #lucky-draw
+    .title
+      //- Pug loader currently does not handle webpack alias so we will use relative path here
+      include ../assets/images/title.svg
+
+    //- .prize  
+    //-   text.p() For <br>
+    //-   text.p(id="prize-name") 
+
+    .slot.prize-slot
+      .slot__outer
+        .slot__inner
+          .slot__shadow
+          #prize.prize-name
+      
+      #sunburst.sunburst
+        img(src="~@images/sunburst.svg" alt="sunburst")
+
+    .slot
+      .slot__outer
+        .slot__inner
+          .slot__shadow
+          #reel.reel
+
+      #sunburst.sunburst
+        img(src="~@images/sunburst.svg" alt="sunburst")
+
+    button#draw-button.solid-button Draw 
+    button#confirm-button.solid-button Confirm
+
+  #settings.settings
+    #settings-panel.settings__panel
+      div.settings__panel__group
+        h1.settings__title Settings
+        div.input-group
+          label.input-label(for="name-list") Name List
+          textarea.input-field.input-field--textarea(rows="8" placeholder="Separate each name by line break" id="name-list")
+
+        div.input-group.input-group--2-column
+          label.input-label(for="remove-from-list") Remove winner from list
+          label.input--switch
+            input(type="checkbox" checked="true" id="remove-from-list")
+            span.slider
+
+        div.input-group.input-group--2-column
+          label.input-label(for="enable-sound") Enable sound effect
+          label.input--switch
+            input(type="checkbox" checked="true" id="enable-sound")
+            span.slider
+      div.settings__panel__group
+        button#settings-save.solid-button.solid-button Save
+        button#settings-close.solid-button.solid-button--danger Discard and close
+

@@ -1,0 +1,19 @@
+//- Web App Tags
+<!-- webpackIgnore: true -->
+link(rel="manifest" href="manifest.json")
+
+meta(name="apple-mobile-web-app-status-bar-style" content="black")
+meta(name="apple-mobile-web-app-capable" content="yes")
+
+
+- var touchIconsSize = ['180x180', '152x152', '144x144', '120x120', '114x114', '76x76', '72x72', '57x57'];
+each size in touchIconsSize
+  <!-- webpackIgnore: true -->
+  link(rel="apple-touch-icon" sizes=size href="assets/images/touch-icons/apple-touch-icon-" + size + ".png")
+
+<!-- webpackIgnore: true -->
+link(rel="apple-touch-icon" href="assets/images/touch-icons/apple-touch-icon-57x57.png")
+
+//- Android
+meta(name="theme-color" content="#f20c49")
+meta(name="mobile-web-app-capable" content="yes")
