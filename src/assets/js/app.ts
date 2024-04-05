@@ -2,12 +2,11 @@ import confetti from 'canvas-confetti';
 import Slot from '@js/Slot';
 import prizes from '../../PrizeList.json';
 import SoundEffects from '@js/SoundEffects';
-import fs from 'fs';
 
 // Initialize slot machine
 (() => {
   let totalPrize = 50;
-  let prizeIndex = 0;
+  let prizeIndex = Number(localStorage.getItem("PrizeIndex")) || 0;
 
   //const fs = require("fs/promises");
 
@@ -19,6 +18,7 @@ import fs from 'fs';
   const settingsContent = document.getElementById('settings-panel') as HTMLDivElement | null;
   const settingsSaveButton = document.getElementById('settings-save') as HTMLButtonElement | null;
   const settingsCloseButton = document.getElementById('settings-close') as HTMLButtonElement | null;
+  const settingsStorageClearButton = document.getElementById('settings-storage-clear') as HTMLButtonElement | null;
   const sunburstSvg = document.getElementById('sunburst') as HTMLImageElement | null;
   const confettiCanvas = document.getElementById('confetti-canvas') as HTMLCanvasElement | null;
   const nameListTextArea = document.getElementById('name-list') as HTMLTextAreaElement | null;
@@ -36,6 +36,7 @@ import fs from 'fs';
     && settingsContent
     && settingsSaveButton
     && settingsCloseButton
+    && settingsStorageClearButton
     && sunburstSvg
     && confettiCanvas
     && nameListTextArea
@@ -76,15 +77,26 @@ import fs from 'fs';
     }
   }
 
-  const savePersonPrize = () => {
+  const savePersonPrize = async () => {
     let prizeName = prizes[prizeIndex];
     let personName = slot.currentWinnerName;
 
     console.log("###### Prize Name: " + prizeName);
     console.log("###### Winner Name: " + personName);
 
-    const data = fs.readFileSync("../../PersonPrizeList.json", 'utf-8');
-    console.log("Data: " + data);
+    let winnerList : any = [];
+    if (localStorage.length > 0) {
+      if (localStorage.getItem("Winner") !== undefined) {
+        winnerList = JSON.parse(localStorage.getItem("Winner") || '[]');
+      }
+    } 
+    winnerList.push({
+      PrizeName: prizeName,
+      PersonName: personName
+    });
+    localStorage.setItem("Winner", JSON.stringify(winnerList));
+
+    console.log("Winner List:  " + JSON.parse(localStorage.getItem("Winner") || '[]'));
   }
   
   /** Triggers cconfeetti animation until animation is canceled */
@@ -153,6 +165,14 @@ import fs from 'fs';
     settingsWrapper.style.display = 'none';
   };
 
+  const onSettingsStorageClear = () => {
+    localStorage.removeItem("Winner");
+    localStorage.removeItem("PrizeIndex");
+    settingsContent.scrollTop = 0;
+    settingsWrapper.style.display = 'none';
+    window.location.reload();
+  };
+
   // Click handler for "Draw" button
   drawButton.addEventListener('click', () => {
     if (!slot.names.length) {
@@ -168,6 +188,10 @@ import fs from 'fs';
     savePersonPrize();
 
     prizeIndex = prizeIndex + 1;
+    localStorage.setItem("PrizeIndex", prizeIndex.toString());
+
+    console.log("PrizeIndex: " + localStorage.getItem("PrizeIndex"));
+    
     let reelContainer = document.querySelector('#reel') as HTMLElement | null;
     if (reelContainer instanceof HTMLElement) {
       reelContainer.removeChild(reelContainer.childNodes[0]);
@@ -211,4 +235,7 @@ import fs from 'fs';
 
   // Click handler for "Discard and close" button for setting page
   settingsCloseButton.addEventListener('click', onSettingsClose);
+
+  // Click handler for "Clear Storage" button for setting page
+  settingsStorageClearButton.addEventListener('click', onSettingsStorageClear);
 })();

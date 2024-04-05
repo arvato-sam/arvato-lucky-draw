@@ -57,7 +57,7 @@ export default class Slot {
    */
   constructor(
     {
-      maxReelItems = 30,
+      maxReelItems = 200,
       removeWinner = true,
       reelContainerSelector,
       onSpinStart,
@@ -65,8 +65,17 @@ export default class Slot {
       onNameListChanged
     }: SlotConfigurations
   ) {
+
+    let personList = persons;
+    let winnerPersonList = new Array();
+    if (localStorage.length > 0) {
+      let winnerList = JSON.parse(localStorage.getItem("Winner") || '[]');
+      winnerPersonList = winnerList.map(a => a.PersonName)
+      personList = personList.filter(val => !winnerPersonList.includes(val));
+    }
+
     this.currentWinner = "";
-    this.nameList = persons;
+    this.nameList = personList;
     this.havePreviousWinner = false;
     this.reelContainer = document.querySelector(reelContainerSelector);
     this.maxReelItems = maxReelItems;

@@ -103,7 +103,7 @@ export default class SoundEffects {
     const totalDuration = musicNotes
       .reduce((currentNoteTime, { duration }) => currentNoteTime + duration, 0);
 
-    this.playSound(musicNotes, { type: 'triangle', volume: 1, easeOut: true });
+    //this.playSound(musicNotes, { type: 'triangle', volume: 1, easeOut: true });
 
     return new Promise<boolean>((resolve) => {
       setTimeout(() => {
@@ -117,6 +117,33 @@ export default class SoundEffects {
    * @param durationInSecond  Duration of sound effect in seconds
    * @returns Has sound effect been played
    */
+  public spin_old(durationInSecond: number): Promise<boolean> {
+    if (this.isMuted) {
+      return Promise.resolve(false);
+    }
+
+    const musicNotes: SoundSeries[] = [
+      { key: 'D#3', duration: 0.1 },
+      { key: 'C#3', duration: 0.1 },
+      { key: 'C3', duration: 0.1 }
+    ];
+
+    const totalDuration = musicNotes
+      .reduce((currentNoteTime, { duration }) => currentNoteTime + duration, 0);
+
+    const duration = Math.floor(durationInSecond * 10);
+    this.playSound(
+      Array.from(Array(duration), (_, index) => musicNotes[index % 3]),
+      { type: 'triangle', easeOut: false, volume: 2 }
+    );
+
+    return new Promise<boolean>((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, totalDuration * 1000);
+    });
+  }
+
   public spin(durationInSecond: number): Promise<boolean> {
     if (this.isMuted) {
       return Promise.resolve(false);

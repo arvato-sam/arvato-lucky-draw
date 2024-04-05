@@ -60,17 +60,5 @@
     "core-js": "^3.35.1",
     "element-remove-polyfill": "^1.1.0",
     "web-animations-js": "^2.3.2"
-  },
-  "browserslist": [
-    ">0.2%",
-    "last 2 versions",
-    "not dead",
-    "ie 11",
-    "firefox 15",
-    "opera 12"
-  ],
-  "browser": {
-    "fs": false,
-    "path": false
   }
 }
