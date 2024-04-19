@@ -44,6 +44,14 @@ body {
   }
 }
 
+.hidden {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
 .theme--red {
   background: linear-gradient(
     240deg,

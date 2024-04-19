@@ -194,7 +194,7 @@ import SoundEffects from '@js/SoundEffects';
     
     let reelContainer = document.querySelector('#reel') as HTMLElement | null;
     if (reelContainer instanceof HTMLElement) {
-      reelContainer.removeChild(reelContainer.childNodes[0]);
+      reelContainer.classList.add("hidden")
     }
     stopWinningAnimation();
     showPrizeName();

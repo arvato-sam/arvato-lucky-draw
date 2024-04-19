@@ -187,6 +187,7 @@ export default class Slot {
     if (!reelContainer || !reelAnimation) {
       return false;
     }
+    reelContainer.classList.remove("hidden")
 
     // Shuffle names and create reel items
     let randomNames = Slot.shuffleNames<string>(this.nameList);
