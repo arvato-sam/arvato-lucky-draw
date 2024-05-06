@@ -5,7 +5,7 @@ import SoundEffects from '@js/SoundEffects';
 
 // Initialize slot machine
 (() => {
-  let totalPrize = 50;
+  let totalPrize = 121;
   let prizeIndex = Number(localStorage.getItem("PrizeIndex")) || 0;
 
   //const fs = require("fs/promises");
@@ -19,9 +19,14 @@ import SoundEffects from '@js/SoundEffects';
   const settingsSaveButton = document.getElementById('settings-save') as HTMLButtonElement | null;
   const settingsCloseButton = document.getElementById('settings-close') as HTMLButtonElement | null;
   const settingsStorageClearButton = document.getElementById('settings-storage-clear') as HTMLButtonElement | null;
+  const winnerButton = document.getElementById('winner-button') as HTMLButtonElement | null;
+  const winnerWrapper = document.getElementById('winner') as HTMLDivElement | null;
+  const winnerContent = document.getElementById('winner-panel') as HTMLDivElement | null;
+  const winnerCloseButton = document.getElementById('winner-close') as HTMLButtonElement | null;
   const sunburstSvg = document.getElementById('sunburst') as HTMLImageElement | null;
   const confettiCanvas = document.getElementById('confetti-canvas') as HTMLCanvasElement | null;
   const nameListTextArea = document.getElementById('name-list') as HTMLTextAreaElement | null;
+  const winnerListTextArea = document.getElementById('winner-list') as HTMLTextAreaElement | null;
   const prizeNameParagraph = document.getElementById('prize') as HTMLElement | null;
   const removeNameFromListCheckbox = document.getElementById('remove-from-list') as HTMLInputElement | null;
   const enableSoundCheckbox = document.getElementById('enable-sound') as HTMLInputElement | null;
@@ -37,9 +42,14 @@ import SoundEffects from '@js/SoundEffects';
     && settingsSaveButton
     && settingsCloseButton
     && settingsStorageClearButton
+    && winnerButton
+    && winnerWrapper
+    && winnerContent
+    && winnerCloseButton
     && sunburstSvg
     && confettiCanvas
     && nameListTextArea
+    && winnerListTextArea
     && prizeNameParagraph
     && removeNameFromListCheckbox
     && enableSoundCheckbox
@@ -81,9 +91,6 @@ import SoundEffects from '@js/SoundEffects';
     let prizeName = prizes[prizeIndex];
     let personName = slot.currentWinnerName;
 
-    console.log("###### Prize Name: " + prizeName);
-    console.log("###### Winner Name: " + personName);
-
     let winnerList : any = [];
     if (localStorage.length > 0) {
       if (localStorage.getItem("Winner") !== undefined) {
@@ -92,11 +99,10 @@ import SoundEffects from '@js/SoundEffects';
     } 
     winnerList.push({
       PrizeName: prizeName,
-      PersonName: personName
+      PersonName: personName,
+      PrizeNo: prizeIndex
     });
     localStorage.setItem("Winner", JSON.stringify(winnerList));
-
-    console.log("Winner List:  " + JSON.parse(localStorage.getItem("Winner") || '[]'));
   }
   
   /** Triggers cconfeetti animation until animation is canceled */
@@ -155,7 +161,7 @@ import SoundEffects from '@js/SoundEffects';
   const onSettingsOpen = () => {
     nameListTextArea.value = slot.names.length ? slot.names.join('\n') : '';
     removeNameFromListCheckbox.checked = slot.shouldRemoveWinnerFromNameList;
-    enableSoundCheckbox.checked = !soundEffects.mute;
+    enableSoundCheckbox.checked = soundEffects.mute;
     settingsWrapper.style.display = 'block';
   };
 
@@ -171,6 +177,23 @@ import SoundEffects from '@js/SoundEffects';
     settingsContent.scrollTop = 0;
     settingsWrapper.style.display = 'none';
     window.location.reload();
+  };
+
+  /** To open the winner page */
+  const onWinnerOpen = () => {
+    let names = "PrizeNo,PrizeName,PersonName\n";
+    let winnerList = JSON.parse(localStorage.getItem("Winner") || '[]');
+    winnerList.forEach(winObj => {
+      names += (totalPrize - winObj['PrizeNo']) + ',' + winObj['PrizeName'] + ',' + winObj['PersonName'] + '\n';
+    });
+    winnerListTextArea.value = names;
+    winnerWrapper.style.display = 'block';
+  };
+
+  /** To close the winner page */
+  const onWinnerClose = () => {
+    winnerWrapper.scrollTop = 0;
+    winnerWrapper.style.display = 'none';
   };
 
   // Click handler for "Draw" button
@@ -198,6 +221,9 @@ import SoundEffects from '@js/SoundEffects';
     }
     stopWinningAnimation();
     showPrizeName();
+    if (prizeIndex - 1 === totalPrize) {
+      drawButton.disabled = true;
+    }
     confirmButton.disabled = true;
   });
 
@@ -238,4 +264,8 @@ import SoundEffects from '@js/SoundEffects';
 
   // Click handler for "Clear Storage" button for setting page
   settingsStorageClearButton.addEventListener('click', onSettingsStorageClear);
+
+  winnerButton.addEventListener( 'click', onWinnerOpen );
+
+  winnerCloseButton.addEventListener( 'click', onWinnerClose );
 })();
