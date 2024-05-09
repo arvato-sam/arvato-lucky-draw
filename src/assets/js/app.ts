@@ -69,8 +69,13 @@ import SoundEffects from '@js/SoundEffects';
   let confettiAnimationId;
 
   //First time Prize Name set
-  if (prizeNameParagraph instanceof HTMLElement) {
-    prizeNameParagraph.innerHTML = '<div>' + (totalPrize - prizeIndex) + ". " + prizes[prizeIndex] + '</div>';
+  if (prizeIndex === totalPrize) {
+    drawButton.disabled = true;
+    prizeNameParagraph.innerHTML = '<div>Done</div>';
+  } else {
+    if (prizeNameParagraph instanceof HTMLElement) {
+      prizeNameParagraph.innerHTML = '<div>' + (totalPrize - prizeIndex) + ". " + prizes[prizeIndex] + '</div>';
+    }
   }
   confirmButton.disabled = true;
 
