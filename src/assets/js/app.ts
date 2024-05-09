@@ -83,7 +83,11 @@ import SoundEffects from '@js/SoundEffects';
   //Prize Name show
   const showPrizeName = () => {
     if (prizeNameParagraph instanceof HTMLElement) {
-      prizeNameParagraph.innerHTML = '<div>' + (totalPrize - prizeIndex) + ". " + prizes[prizeIndex] + '</div>';
+      if (prizeIndex === totalPrize) {
+        prizeNameParagraph.innerHTML = '<div>Done</div>';  
+      } else {
+        prizeNameParagraph.innerHTML = '<div>' + (totalPrize - prizeIndex) + ". " + prizes[prizeIndex] + '</div>';
+      }
     }
   }
 
@@ -221,7 +225,8 @@ import SoundEffects from '@js/SoundEffects';
     }
     stopWinningAnimation();
     showPrizeName();
-    if (prizeIndex - 1 === totalPrize) {
+
+    if (prizeIndex === totalPrize) {
       drawButton.disabled = true;
     }
     confirmButton.disabled = true;

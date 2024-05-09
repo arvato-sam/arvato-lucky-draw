@@ -88,7 +88,8 @@ export default class SoundEffects {
    * @returns Has sound effect been played
    */
   public win(): Promise<boolean> {
-    if (this.isMuted) {
+    //if (this.isMuted) {
+    if (true) {
       return Promise.resolve(false);
     }
 
@@ -118,7 +119,9 @@ export default class SoundEffects {
    * @returns Has sound effect been played
    */
   public spin(durationInSecond: number): Promise<boolean> {
-    if (this.isMuted) {
+    
+    //if (this.isMuted) {
+    if (true) {
       return Promise.resolve(false);
     }
 
