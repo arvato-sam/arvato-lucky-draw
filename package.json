@@ -60,5 +60,10 @@
     "core-js": "^3.35.1",
     "element-remove-polyfill": "^1.1.0",
     "web-animations-js": "^2.3.2"
-  }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
