@@ -96,6 +96,21 @@ import SoundEffects from '@js/SoundEffects';
     }
   }
 
+  /** Utility function to download JSON data as a file */
+  const downloadJsonFile = (data: any, filename: string) => {
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   const savePersonPrize = async () => {
     let prizeName = prizes[prizeIndex];
     let personName = slot.currentWinnerName;
@@ -112,6 +127,11 @@ import SoundEffects from '@js/SoundEffects';
       PrizeNo: prizeIndex
     });
     localStorage.setItem("Winner", JSON.stringify(winnerList));
+    
+    // Write winner list to local file system
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `winner-list-${timestamp}.json`;
+    downloadJsonFile(winnerList, filename);
   }
   
   /** Triggers cconfeetti animation until animation is canceled */
