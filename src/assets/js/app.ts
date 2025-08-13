@@ -5,7 +5,7 @@ import SoundEffects from '@js/SoundEffects';
 
 // Initialize slot machine
 (() => {
-  let totalPrize = 121;
+  let totalPrize = 163;
   let prizeIndex = Number(localStorage.getItem("PrizeIndex")) || 0;
 
   //const fs = require("fs/promises");

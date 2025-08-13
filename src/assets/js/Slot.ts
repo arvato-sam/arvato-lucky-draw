@@ -95,7 +95,7 @@ export default class Slot {
         { transform: `translateY(-${(this.maxReelItems - 1) * (7.5 * 16)}px)`, filter: 'blur(0)' }
       ],
       {
-        duration: this.maxReelItems * 100, // 100ms for 1 item
+        duration: this.maxReelItems * 50, // 50ms for 1 item
         easing: 'ease-in-out',
         iterations: 1
       }
@@ -212,6 +212,11 @@ export default class Slot {
     console.info('Displayed items: ', randomNames);
     console.info('Winner: ', randomNames[randomNames.length - 1]);
 
+    let hasOnlyOneNameLeft: boolean = false;
+    if (this.nameList.length === 1) {
+      hasOnlyOneNameLeft = true;
+    }
+
     // Remove winner form name list if necessary
     if (shouldRemoveWinner) {
       this.nameList.splice(this.nameList.findIndex(
@@ -219,20 +224,20 @@ export default class Slot {
       ), 1);
     }
 
-    console.info('Remaining: ', this.nameList);
+    if (!hasOnlyOneNameLeft) {
+      // Play the spin animation
+      const animationPromise = new Promise((resolve) => {
+        reelAnimation.onfinish = resolve;
+      });
 
-    // Play the spin animation
-    const animationPromise = new Promise((resolve) => {
-      reelAnimation.onfinish = resolve;
-    });
+      reelAnimation.play();
 
-    reelAnimation.play();
+      await animationPromise;
 
-    await animationPromise;
-
-    // Sets the current playback time to the end of the animation
-    // Fix issue for animatin not playing after the initial play on Safari
-    reelAnimation.finish();
+      // Sets the current playback time to the end of the animation
+      // Fix issue for animatin not playing after the initial play on Safari
+      reelAnimation.finish();
+    }
 
     Array.from(reelContainer.children)
       .slice(0, reelContainer.children.length - 1)

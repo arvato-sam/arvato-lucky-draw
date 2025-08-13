@@ -42,6 +42,7 @@ module.exports = {
         },
         { from: path.resolve(__dirname, '../src/assets/images/favicon.ico'), to: 'assets/images/favicon.ico' },
         { from: path.resolve(__dirname, '../src/manifest.json'), to: 'manifest.json' }
+        //{ from: path.resolve(__dirname, '../src/assets/media'), to: 'assets/media' }
       ]
     }),
     new HtmlWebpackPlugin({
