@@ -23,6 +23,7 @@ import SoundEffects from '@js/SoundEffects';
   const winnerWrapper = document.getElementById('winner') as HTMLDivElement | null;
   const winnerContent = document.getElementById('winner-panel') as HTMLDivElement | null;
   const winnerCloseButton = document.getElementById('winner-close') as HTMLButtonElement | null;
+  const winnerDownloadButton = document.getElementById('winner-download') as HTMLButtonElement | null;
   const sunburstSvg = document.getElementById('sunburst') as HTMLImageElement | null;
   const confettiCanvas = document.getElementById('confetti-canvas') as HTMLCanvasElement | null;
   const nameListTextArea = document.getElementById('name-list') as HTMLTextAreaElement | null;
@@ -45,6 +46,7 @@ import SoundEffects from '@js/SoundEffects';
     && winnerButton
     && winnerWrapper
     && winnerContent
+    && winnerDownloadButton
     && winnerCloseButton
     && sunburstSvg
     && confettiCanvas
@@ -112,6 +114,20 @@ import SoundEffects from '@js/SoundEffects';
       PrizeNo: prizeIndex
     });
     localStorage.setItem("Winner", JSON.stringify(winnerList));
+  }
+
+  const downloadJsonFile = (data: any, filename: string) => {
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   }
   
   /** Triggers cconfeetti animation until animation is canceled */
@@ -199,6 +215,14 @@ import SoundEffects from '@js/SoundEffects';
     winnerWrapper.style.display = 'block';
   };
 
+  const downloadWinnerList = () => {
+    let winnerList = JSON.parse(localStorage.getItem("Winner") || '[]');
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const filename = `winner-list-${timestamp}.json`;
+    downloadJsonFile(winnerList, filename);
+  }
+
   /** To close the winner page */
   const onWinnerClose = () => {
     winnerWrapper.scrollTop = 0;
@@ -271,6 +295,9 @@ import SoundEffects from '@js/SoundEffects';
 
   // Click handler for "Discard and close" button for setting page
   settingsCloseButton.addEventListener('click', onSettingsClose);
+
+  // Click handler for "Download Winner List" button for setting page
+  winnerDownloadButton.addEventListener('click', downloadWinnerList);
 
   // Click handler for "Clear Storage" button for setting page
   settingsStorageClearButton.addEventListener('click', onSettingsStorageClear);
